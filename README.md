@@ -87,6 +87,12 @@ Categories=Utility;FileTools;
 EOF
 ```
 
+After building from source, `./packaging/install.sh` does the same thing and goes
+further: it installs the AppImage in `~/AppImages`, copies every icon size into
+`~/.local/share/icons/hicolor`, writes the menu entry and refreshes the icon and
+menu caches (GTK and KDE). If your panel keeps showing an older icon after an
+update, restart it once with `plasmashell --replace &`.
+
 Requirements: Linux x86_64, X11 or Wayland, OpenGL. No other packages.
 
 ### 2. Build from source
@@ -99,6 +105,7 @@ flutter pub get
 flutter run -d linux              # development
 flutter build linux --release     # bundle in build/linux/x64/release/bundle
 ./packaging/build-appimage.sh     # single ELF in dist/
+./packaging/install.sh            # AppImage + icons + menu entry
 ```
 
 Toolchain: Flutter (Linux desktop), `cmake`, `ninja`, `clang`, `libgtk-3-dev`,
@@ -173,7 +180,7 @@ lib/xiso.dart      embedded-tool extraction, process runner, progress parsing
 lib/settings.dart  persisted preferences
 lib/l10n/          ARB sources + generated localizations
 assets/bin/        the statically linked extract-xiso
-packaging/         AppImage script, icon source (SVG → PNGs), icon candidates
+packaging/         AppImage build + install scripts, icon source (SVG → PNGs)
 ```
 
 ## Quality

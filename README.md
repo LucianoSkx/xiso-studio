@@ -54,7 +54,10 @@ nothing installed at runtime.
 
 ## Install
 
-### 1. Download the single ELF (recommended)
+### 1. Download the single ELF
+
+Published builds live under [Releases](https://github.com/LucianoSkx/xiso-studio/releases).
+Once a release is out:
 
 ```bash
 curl -L -o XISO-Studio.AppImage \
@@ -62,6 +65,9 @@ curl -L -o XISO-Studio.AppImage \
 chmod +x XISO-Studio.AppImage
 ./XISO-Studio.AppImage
 ```
+
+No release yet? Build it from source — same result, no dependencies on the target
+machine.
 
 Optional: hook it into your application menu
 
@@ -185,9 +191,13 @@ flutter test        # 25 tests
 | `flow_test` | end-to-end through the UI: type paths, click Extract, verify files on disk; Create a real XISO and list it back |
 | `xiso_test` | embedded tool extraction, create/list/extract against a real image |
 
-GitHub Actions runs analyze + tests on every push
-([`ci.yml`](.github/workflows/ci.yml)); a `v*` tag builds the AppImage and
-attaches it to the release ([`release.yml`](.github/workflows/release.yml)).
+GitHub Actions runs `flutter analyze` and the whole suite on every push
+([`ci.yml`](.github/workflows/ci.yml)).
+
+Publishing is **manual on purpose**: Actions → *Release* → *Run workflow*, with the
+version as input. That builds the AppImage and creates the `v<version>` release
+([`release.yml`](.github/workflows/release.yml)). Bump `pubspec.yaml` and
+`lib/version.dart` together first — a test keeps them in sync.
 
 ## Troubleshooting
 

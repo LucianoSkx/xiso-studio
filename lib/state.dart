@@ -162,6 +162,15 @@ class AppState extends ChangeNotifier {
     super.dispose();
   }
 
+  /// Imagens usadas recentemente (mais nova primeiro), para o histórico.
+  List<String> get recentImages => List.unmodifiable(_settings.recentImages);
+
+  /// Registra uma imagem usada numa execução.
+  void rememberImage(String path) {
+    _settings.addRecentImage(path);
+    notifyListeners();
+  }
+
   /// Guarda a pasta onde a execução gravou, para o botão "Abrir pasta".
   void setOutputDir(String? dir) {
     if (lastOutputDir == dir) return;

@@ -561,6 +561,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Abrir pasta'**
   String get openOutputFolder;
+
+  /// Dica do botão de histórico no campo de imagem
+  ///
+  /// In pt, this message translates to:
+  /// **'Imagens recentes'**
+  String get recentLabel;
 }
 
 class _AppLocalizationsDelegate

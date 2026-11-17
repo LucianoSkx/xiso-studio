@@ -227,6 +227,8 @@ class _ExtractPageState extends State<ExtractPage> {
                 placeholder: l.placeholderNoImage,
                 icon: Icons.album_outlined,
                 pickLabel: l.actionChoose,
+                recents: widget.state.recentImages,
+                recentLabel: l.recentLabel,
                 onChanged: (v) => _setFiles(v.trim().isEmpty ? [] : [v.trim()]),
                 onPick: () async {
                   final files = await pickIsoFiles();
@@ -308,6 +310,7 @@ class _ListPageState extends State<ListPage> {
   Future<void> _start() async {
     final state = widget.state;
     setState(() => _entries = null);
+    state.rememberImage(_iso!);
     await state.run(buildListArgs(_iso!),
         label: context.l10n.listLabel(baseName(_iso!)));
     final count = parseEntryCount(state.log.join('\n'));
@@ -333,6 +336,8 @@ class _ListPageState extends State<ListPage> {
                 placeholder: l.placeholderNoImageSelected,
                 icon: Icons.album_outlined,
                 pickLabel: l.actionChoose,
+                recents: widget.state.recentImages,
+                recentLabel: l.recentLabel,
                 onChanged: (v) =>
                     setState(() => _iso = v.trim().isEmpty ? null : v.trim()),
                 onPick: () async {
@@ -496,6 +501,9 @@ class _RewritePageState extends State<RewritePage> {
   Future<void> _start() async {
     final state = widget.state;
     final l = context.l10n;
+    for (final f in _files) {
+      state.rememberImage(f);
+    }
     for (var i = 0; i < _files.length; i++) {
       final args = buildRewriteArgs(
         iso: _files[i],
@@ -543,6 +551,8 @@ class _RewritePageState extends State<RewritePage> {
                 placeholder: l.placeholderNoImageSelected,
                 icon: Icons.album_outlined,
                 pickLabel: l.actionChoose,
+                recents: widget.state.recentImages,
+                recentLabel: l.recentLabel,
                 onChanged: (v) => setState(() {
                   _files.clear();
                   if (v.trim().isNotEmpty) _files.add(v.trim());

@@ -53,6 +53,8 @@ class PathPicker extends StatefulWidget {
     this.icon = Icons.folder_open,
     this.onClear,
     this.pickLabel = 'Escolher',
+    this.recents = const [],
+    this.recentLabel = 'Recentes',
   });
 
   final String? value;
@@ -63,8 +65,19 @@ class PathPicker extends StatefulWidget {
   final IconData icon;
   final String pickLabel;
 
+  /// Imagens usadas recentemente; quando há alguma, aparece o botão de histórico.
+  final List<String> recents;
+  final String recentLabel;
+
   @override
   State<PathPicker> createState() => _PathPickerState();
+}
+
+String _nomeArquivo(String caminho) => caminho.split('/').last;
+
+String _pastaDe(String caminho) {
+  final i = caminho.lastIndexOf('/');
+  return i <= 0 ? caminho : caminho.substring(0, i);
 }
 
 class _PathPickerState extends State<PathPicker> {
@@ -135,6 +148,40 @@ class _PathPickerState extends State<PathPicker> {
             ),
           ),
         ),
+        if (widget.recents.isNotEmpty) ...[
+          const SizedBox(width: 8),
+          SizedBox(
+            height: 46,
+            child: PopupMenuButton<String>(
+              tooltip: widget.recentLabel,
+              onSelected: (p) {
+                _ctrl.text = p;
+                widget.onChanged(p);
+              },
+              icon: const Icon(Icons.history, size: 18),
+              itemBuilder: (_) => [
+                for (final p in widget.recents)
+                  PopupMenuItem<String>(
+                    value: p,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(_nomeArquivo(p), style: t.textTheme.bodySmall),
+                        Text(
+                          _pastaDe(p),
+                          style: t.textTheme.labelSmall?.copyWith(
+                            color: t.colorScheme.onSurfaceVariant,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(width: 10),
         FilledButton.tonalIcon(
           onPressed: widget.onPick,

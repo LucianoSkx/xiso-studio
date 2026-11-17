@@ -106,5 +106,9 @@
   "openOutputFolder": "Abrir pasta",
   "@openOutputFolder": {
     "description": "Botão que abre a pasta onde a execução gravou os arquivos"
+  },
+  "recentLabel": "Imagens recentes",
+  "@recentLabel": {
+    "description": "Dica do botão de histórico no campo de imagem"
   }
 }

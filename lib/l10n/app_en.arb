@@ -106,5 +106,9 @@
   "openOutputFolder": "Open folder",
   "@openOutputFolder": {
     "description": "Button that opens the folder where the run wrote its files"
+  },
+  "recentLabel": "Recent images",
+  "@recentLabel": {
+    "description": "Tooltip of the history button in the image field"
   }
 }

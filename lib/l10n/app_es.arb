@@ -106,5 +106,9 @@
   "openOutputFolder": "Abrir carpeta",
   "@openOutputFolder": {
     "description": "Botón que abre la carpeta donde la ejecución escribió los archivos"
+  },
+  "recentLabel": "Imágenes recientes",
+  "@recentLabel": {
+    "description": "Consejo del botón de historial en el campo de imagen"
   }
 }

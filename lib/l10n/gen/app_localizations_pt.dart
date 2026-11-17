@@ -284,4 +284,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get openOutputFolder => 'Abrir pasta';
+
+  @override
+  String get recentLabel => 'Imagens recentes';
 }

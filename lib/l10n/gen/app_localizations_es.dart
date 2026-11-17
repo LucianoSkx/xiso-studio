@@ -285,4 +285,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get openOutputFolder => 'Abrir carpeta';
+
+  @override
+  String get recentLabel => 'Imágenes recientes';
 }

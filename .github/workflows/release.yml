@@ -1,9 +1,14 @@
 name: Release
 
+# Só roda quando alguém dispara manualmente (Actions → Release → Run workflow)
+# com a versão da tag, ex.: 1.0.0. Nada é publicado por push automático.
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão a publicar (ex.: 1.0.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -39,5 +44,7 @@ jobs:
       - name: Publicar no release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ inputs.version }}
+          name: XISO Studio v${{ inputs.version }}
           files: dist/XISO-Studio-x86_64.AppImage
           generate_release_notes: true

@@ -136,6 +136,28 @@ void main() {
     }
   });
 
+  testWidgets('histórico de recentes preenche o campo de imagem', (tester) async {
+    final tmp = Directory.systemTemp.createTempSync('xiso_recent_');
+    try {
+      File('${tmp.path}/settings.json').writeAsStringSync(
+        '{"locale":"pt","recent":["/tmp/jogo-velho.iso","/tmp/outro.iso"]}',
+      );
+      final state = buildState(tmp);
+      await pumpApp(tester, state);
+      expect(state.recentImages, ['/tmp/jogo-velho.iso', '/tmp/outro.iso']);
+
+      await tester.tap(find.byIcon(Icons.history).first);
+      await tester.pumpAndSettle();
+      expect(find.text('jogo-velho.iso'), findsOneWidget);
+
+      await tester.tap(find.text('jogo-velho.iso'));
+      await tester.pumpAndSettle();
+      expect(find.text('/tmp/jogo-velho.iso'), findsWidgets);
+    } finally {
+      tmp.deleteSync(recursive: true);
+    }
+  });
+
   testWidgets('barra de progresso mostra a contagem de arquivos', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

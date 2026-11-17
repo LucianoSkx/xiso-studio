@@ -47,6 +47,8 @@ nothing installed at runtime.
 - **Desktop notification when a run ends** — success or failure, so you can leave
   the window in the background during a long extraction.
 - **Open folder** — after a run finishes, one click reveals the files it wrote.
+- **Recent images** — the last eight images you used, one click away in the image
+  field (stored in `~/.config/xiso-studio/settings.json`).
 - **Three languages** — English, Português (BR) and Español, switchable in-app
   and remembered between sessions.
 - **One file to ship** — the `extract-xiso` binary is embedded and unpacked to

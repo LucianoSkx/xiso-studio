@@ -268,4 +268,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String logHidden(int count) {
     return '… $count linhas anteriores ocultas';
   }
+
+  @override
+  String get logSave => 'Salvar log';
+
+  @override
+  String logSaved(String path) {
+    return 'Log salvo em $path';
+  }
+
+  @override
+  String logSaveFailed(String message) {
+    return 'Não foi possível salvar o log: $message';
+  }
 }

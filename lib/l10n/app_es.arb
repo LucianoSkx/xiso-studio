@@ -80,5 +80,27 @@
         "type": "int"
       }
     }
+  },
+  "logSave": "Guardar registro",
+  "@logSave": {
+    "description": "Consejo del botón que exporta la consola a un archivo"
+  },
+  "logSaved": "Registro guardado en {path}",
+  "@logSaved": {
+    "description": "Confirmación tras guardar el registro",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "logSaveFailed": "No se pudo guardar el registro: {message}",
+  "@logSaveFailed": {
+    "description": "Error al guardar el registro",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   }
 }

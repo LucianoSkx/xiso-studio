@@ -80,5 +80,27 @@
         "type": "int"
       }
     }
+  },
+  "logSave": "Save log",
+  "@logSave": {
+    "description": "Tooltip of the button that exports the console to a file"
+  },
+  "logSaved": "Log saved to {path}",
+  "@logSaved": {
+    "description": "Confirmation after writing the log",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "logSaveFailed": "Could not save the log: {message}",
+  "@logSaveFailed": {
+    "description": "Failure while writing the log",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   }
 }

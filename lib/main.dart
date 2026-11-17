@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n_ext.dart';
+import 'log_export.dart';
 import 'pages.dart';
 import 'state.dart';
 import 'version.dart';
@@ -414,6 +418,36 @@ class LogColumn extends StatelessWidget {
   const LogColumn({super.key, required this.state});
   final AppState state;
 
+  /// Exporta o console inteiro (não só o trecho exibido) para um arquivo.
+  Future<void> _salvarLog(BuildContext context, AppState state) async {
+    final l = context.l10n;
+    final mensageiro = ScaffoldMessenger.of(context);
+    // Sem diretório inicial o diálogo abre na pasta de montagem do AppImage.
+    final casa = Platform.environment['HOME'];
+    final documentos = casa == null ? null : '$casa/Documents';
+    final inicial = documentos != null && Directory(documentos).existsSync()
+        ? documentos
+        : casa;
+    final destino = await getSaveLocation(
+      suggestedName: logFileName(),
+      initialDirectory: inicial,
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'Text', extensions: ['txt']),
+      ],
+    );
+    if (destino == null) return;
+    try {
+      await File(destino.path).writeAsString(buildLogExport(state.log));
+      mensageiro.showSnackBar(
+        SnackBar(content: Text(l.logSaved(destino.path))),
+      );
+    } catch (e) {
+      mensageiro.showSnackBar(
+        SnackBar(content: Text(l.logSaveFailed('$e'))),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
@@ -444,6 +478,16 @@ class LogColumn extends StatelessWidget {
                     ),
                   ),
                 ),
+              const SizedBox(width: 4),
+              IconButton(
+                onPressed: state.log.isEmpty
+                    ? null
+                    : () => _salvarLog(context, state),
+                tooltip: l.logSave,
+                visualDensity: VisualDensity.compact,
+                iconSize: 18,
+                icon: const Icon(Icons.save_alt),
+              ),
             ],
           ),
           const SizedBox(height: 8),

@@ -42,7 +42,8 @@ nothing installed at runtime.
   subfolder.
 - **Editable paths** — paste a path or use the file dialog, whichever is faster.
 - **Live log + cancel** — stdout/stderr streamed into the UI, `SIGTERM` on demand.
-  The console follows the newest line and clears itself when you switch modes.
+  The console follows the newest line, clears itself when you switch modes, and
+  the whole session can be exported with **Save log** (`.txt`).
 - **Three languages** — English, Português (BR) and Español, switchable in-app
   and remembered between sessions.
 - **One file to ship** — the `extract-xiso` binary is embedded and unpacked to

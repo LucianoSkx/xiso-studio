@@ -269,4 +269,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String logHidden(int count) {
     return '… $count líneas anteriores ocultas';
   }
+
+  @override
+  String get logSave => 'Guardar registro';
+
+  @override
+  String logSaved(String path) {
+    return 'Registro guardado en $path';
+  }
+
+  @override
+  String logSaveFailed(String message) {
+    return 'No se pudo guardar el registro: $message';
+  }
 }

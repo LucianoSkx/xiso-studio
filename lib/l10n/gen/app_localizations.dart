@@ -537,6 +537,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'… {count} linhas anteriores ocultas'**
   String logHidden(int count);
+
+  /// Dica do botão que exporta o console para um arquivo
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar log'**
+  String get logSave;
+
+  /// Confirmação após gravar o log
+  ///
+  /// In pt, this message translates to:
+  /// **'Log salvo em {path}'**
+  String logSaved(String path);
+
+  /// Falha ao gravar o log
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar o log: {message}'**
+  String logSaveFailed(String message);
 }
 
 class _AppLocalizationsDelegate

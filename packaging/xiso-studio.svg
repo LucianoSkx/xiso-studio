@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  XISO Studio — marca original.
-  Conceito: um "X" chapado e grosso (XISO) sobre uma barra que representa a
-  mídia/bandeja de uma imagem de disco. Só formas cheias, sem anéis finos nem
-  brilhos, para continuar nítido de 16 a 512 px.
--->
+<!-- Candidato C (v2): caixa isométrica de mídia com X na tampa.
+     X escuro sobre a tampa clara (contraste alto), sem sombra solta,
+     arestas enxutas — pensado para ler bem em 16-32 px. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1a1e25"/>
-      <stop offset="1" stop-color="#0b0d11"/>
+    <linearGradient id="c-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#151a20"/>
+      <stop offset="1" stop-color="#07090c"/>
     </linearGradient>
-    <linearGradient id="mint" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#7CE26C"/>
-      <stop offset="1" stop-color="#3FAE4A"/>
+    <linearGradient id="c-top" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#C9FFB8"/>
+      <stop offset="1" stop-color="#79D966"/>
+    </linearGradient>
+    <linearGradient id="c-left" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#4AAE51"/>
+      <stop offset="1" stop-color="#2B7C37"/>
+    </linearGradient>
+    <linearGradient id="c-right" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#2E8440"/>
+      <stop offset="1" stop-color="#17502E"/>
     </linearGradient>
   </defs>
 
-  <!-- fundo -->
-  <rect width="512" height="512" rx="116" ry="116" fill="url(#bg)"/>
-  <rect x="5" y="5" width="502" height="502" rx="112" ry="112"
-        fill="none" stroke="#52B043" stroke-opacity="0.20" stroke-width="2"/>
+  <rect width="512" height="512" rx="118" ry="118" fill="url(#c-bg)"/>
 
-  <!-- X -->
-  <g stroke="url(#mint)" stroke-width="84" stroke-linecap="round">
-    <path d="M 172 148 L 340 316"/>
-    <path d="M 340 148 L 172 316"/>
+  <!-- faces laterais -->
+  <path d="M 84 214 L 256 300 L 256 414 L 84 328 Z" fill="url(#c-left)"/>
+  <path d="M 428 214 L 256 300 L 256 414 L 428 328 Z" fill="url(#c-right)"/>
+
+  <!-- tampa -->
+  <path d="M 256 118 L 428 214 L 256 310 L 84 214 Z" fill="url(#c-top)"/>
+
+  <!-- X na tampa, nos eixos isométricos -->
+  <g stroke="#0c1015" stroke-width="40" stroke-linecap="round">
+    <path d="M 202 172 L 310 256"/>
+    <path d="M 310 172 L 202 256"/>
   </g>
-
-  <!-- barra: a mídia -->
-  <rect x="146" y="366" width="220" height="34" rx="17" fill="#52B043"/>
 </svg>

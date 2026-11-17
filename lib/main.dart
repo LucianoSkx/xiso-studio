@@ -192,16 +192,19 @@ class Sidebar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF9BF07F), Color(0xFF52B043)],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(9),
+                child: Image.asset(
+                  'packaging/icons/xiso-studio-128.png',
+                  width: 36,
+                  height: 36,
+                  filterQuality: FilterQuality.medium,
+                  errorBuilder: (_, __, ___) => const Icon(
+                    Icons.album,
+                    size: 21,
+                    color: Color(0xFF52B043),
                   ),
-                  borderRadius: BorderRadius.circular(9),
                 ),
-                child: const Icon(Icons.album, size: 21, color: Color(0xFF0B0D11)),
               ),
               const SizedBox(width: 10),
               Expanded(

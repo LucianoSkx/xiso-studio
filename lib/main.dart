@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'l10n_ext.dart';
 import 'log_export.dart';
+import 'notify.dart';
 import 'pages.dart';
 import 'state.dart';
 import 'version.dart';
@@ -89,6 +91,8 @@ class Shell extends StatefulWidget {
 class _ShellState extends State<Shell> {
   AppState get _state => widget.state;
   int _mode = 0;
+  bool _estavaOcupado = false;
+  String? _iconeEmCache;
 
   @override
   void initState() {
@@ -97,7 +101,46 @@ class _ShellState extends State<Shell> {
   }
 
   void _onStateChanged() {
+    final terminou = _estavaOcupado && !_state.busy;
+    _estavaOcupado = _state.busy;
+    if (terminou && _state.outcome != RunOutcome.none) {
+      _avisarConclusao();
+    }
     if (mounted) setState(() {});
+  }
+
+  /// Avisa no desktop que a execução terminou (detalhe pedido pelo usuário).
+  /// Fica muda se não houver `notify-send`; o rodapé sempre mostra o resultado.
+  void _avisarConclusao() {
+    if (!mounted) return;
+    final l = context.l10n;
+    // só falha merece urgência crítica; cancelar é escolha do usuário
+    final erro = _state.outcome == RunOutcome.failed ||
+        _state.outcome == RunOutcome.error;
+    const notifier = DesktopNotifier();
+    _caminhoIcone().then((icone) {
+      notifier.enviar(
+        titulo: 'XISO Studio',
+        corpo: statusMessage(l, _state),
+        icone: icone,
+        critica: erro,
+      );
+    });
+  }
+
+  Future<String?> _caminhoIcone() async {
+    if (_iconeEmCache != null) return _iconeEmCache;
+    try {
+      final dados = await rootBundle.load('packaging/icons/xiso-studio-128.png');
+      final casa = Platform.environment['HOME'] ?? '.';
+      final dir = Directory('$casa/.cache/xiso-studio');
+      if (!dir.existsSync()) dir.createSync(recursive: true);
+      final f = File('${dir.path}/icon.png');
+      f.writeAsBytesSync(dados.buffer.asUint8List());
+      return _iconeEmCache = f.path;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -517,6 +560,21 @@ class LogColumn extends StatelessWidget {
   }
 }
 
+/// Texto do rodapé para o estado atual; também usado na notificação.
+String statusMessage(AppLocalizations l, AppState state) {
+  return switch (state.outcome) {
+    RunOutcome.none => state.ready
+        ? l.statusReady(state.version)
+        : (state.fatalError == null ? l.statusInitializing : l.statusToolFailed),
+    RunOutcome.ok => state.taskLabel == null
+        ? (state.ready ? l.statusReady(state.version) : '')
+        : l.statusDone(state.taskLabel!),
+    RunOutcome.failed => l.statusFailed(state.exitCode ?? -1, state.taskLabel ?? ''),
+    RunOutcome.cancelled => l.statusCancelled,
+    RunOutcome.error => l.statusError(state.errorMessage ?? ''),
+  };
+}
+
 class StatusBar extends StatelessWidget {
   const StatusBar({super.key, required this.state});
   final AppState state;
@@ -532,18 +590,7 @@ class StatusBar extends StatelessWidget {
       RunOutcome.cancelled => (Icons.cancel_outlined, t.colorScheme.tertiary),
       RunOutcome.error => (Icons.error_outline, t.colorScheme.error),
     };
-    final text = switch (state.outcome) {
-      RunOutcome.none => state.ready
-          ? l.statusReady(state.version)
-          : (state.fatalError == null ? l.statusInitializing : l.statusToolFailed),
-      RunOutcome.ok => state.taskLabel == null
-          ? (state.ready ? l.statusReady(state.version) : '')
-          : l.statusDone(state.taskLabel!),
-      RunOutcome.failed =>
-        l.statusFailed(state.exitCode ?? -1, state.taskLabel ?? ''),
-      RunOutcome.cancelled => l.statusCancelled,
-      RunOutcome.error => l.statusError(state.errorMessage ?? ''),
-    };
+    final text = statusMessage(l, state);
 
     return Container(
       height: 34,

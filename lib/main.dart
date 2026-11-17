@@ -617,6 +617,22 @@ class StatusBar extends StatelessWidget {
               style: t.textTheme.labelSmall?.copyWith(color: color),
             ),
           ),
+          if (state.lastOutputDir != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: TextButton.icon(
+                onPressed: () => openInFileManager(state.lastOutputDir!),
+                icon: const Icon(Icons.folder_open_outlined, size: 15),
+                label: Text(l.openOutputFolder),
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  textStyle: t.textTheme.labelSmall,
+                ),
+              ),
+            ),
           Text(
             'v$appVersion',
             style: t.textTheme.labelSmall?.copyWith(

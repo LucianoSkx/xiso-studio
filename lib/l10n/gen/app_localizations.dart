@@ -555,6 +555,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não foi possível salvar o log: {message}'**
   String logSaveFailed(String message);
+
+  /// Botão que abre a pasta onde a execução gravou os arquivos
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir pasta'**
+  String get openOutputFolder;
 }
 
 class _AppLocalizationsDelegate

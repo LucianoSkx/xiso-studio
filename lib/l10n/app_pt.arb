@@ -102,5 +102,9 @@
         "type": "String"
       }
     }
+  },
+  "openOutputFolder": "Abrir pasta",
+  "@openOutputFolder": {
+    "description": "Botão que abre a pasta onde a execução gravou os arquivos"
   }
 }

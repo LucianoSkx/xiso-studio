@@ -282,4 +282,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String logSaveFailed(String message) {
     return 'No se pudo guardar el registro: $message';
   }
+
+  @override
+  String get openOutputFolder => 'Abrir carpeta';
 }

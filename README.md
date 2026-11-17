@@ -46,6 +46,7 @@ nothing installed at runtime.
   the whole session can be exported with **Save log** (`.txt`).
 - **Desktop notification when a run ends** — success or failure, so you can leave
   the window in the background during a long extraction.
+- **Open folder** — after a run finishes, one click reveals the files it wrote.
 - **Three languages** — English, Português (BR) and Español, switchable in-app
   and remembered between sessions.
 - **One file to ship** — the `extract-xiso` binary is embedded and unpacked to

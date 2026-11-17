@@ -94,6 +94,7 @@ class AppState extends ChangeNotifier {
     errorMessage = null;
     progressDone = 0;
     progressTotal = totalFiles;
+    lastOutputDir = null; // não aponte para a pasta da execução anterior
     if (clearLog) _limpar();
     _append('\$ extract-xiso ${args.join(' ')}');
     notifyListeners();
@@ -159,6 +160,13 @@ class AppState extends ChangeNotifier {
     _flush?.cancel();
     _flush = null;
     super.dispose();
+  }
+
+  /// Guarda a pasta onde a execução gravou, para o botão "Abrir pasta".
+  void setOutputDir(String? dir) {
+    if (lastOutputDir == dir) return;
+    lastOutputDir = dir;
+    notifyListeners();
   }
 
   void clearLog() {

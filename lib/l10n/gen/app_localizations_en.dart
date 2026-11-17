@@ -280,4 +280,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String logSaveFailed(String message) {
     return 'Could not save the log: $message';
   }
+
+  @override
+  String get openOutputFolder => 'Open folder';
 }

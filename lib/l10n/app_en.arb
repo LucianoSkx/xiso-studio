@@ -102,5 +102,9 @@
         "type": "String"
       }
     }
+  },
+  "openOutputFolder": "Open folder",
+  "@openOutputFolder": {
+    "description": "Button that opens the folder where the run wrote its files"
   }
 }

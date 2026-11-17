@@ -189,7 +189,9 @@ class _ExtractPageState extends State<ExtractPage> {
         totalFiles: total,
         clearLog: i == 0,
       );
-      state.lastOutputDir = target ?? Directory.current.path;
+      state.setOutputDir(state.outcome == RunOutcome.ok
+          ? (target ?? Directory.current.path)
+          : null);
       if (state.outcome != RunOutcome.ok) {
         ok = false;
         break;
@@ -198,7 +200,7 @@ class _ExtractPageState extends State<ExtractPage> {
     if (ok && _files.length > 1) {
       state.setOutcome(RunOutcome.ok);
       state.taskLabel = l.doneAllExtract(_files.length);
-      state.lastOutputDir = null;
+      state.setOutputDir(null);
     }
   }
 
@@ -397,7 +399,7 @@ class _CreatePageState extends State<CreatePage> {
       label: context.l10n.createLabel(baseName(_out!)),
       totalFiles: total,
     );
-    state.lastOutputDir = File(_out!).parent.path;
+    state.setOutputDir(File(_out!).parent.path);
   }
 
   @override
@@ -512,6 +514,9 @@ class _RewritePageState extends State<RewritePage> {
         totalFiles: total,
         clearLog: i == 0,
       );
+      if (state.outcome == RunOutcome.ok) {
+        state.setOutputDir(_outDir ?? File(_files[i]).parent.path);
+      }
       if (state.outcome != RunOutcome.ok) break;
     }
   }

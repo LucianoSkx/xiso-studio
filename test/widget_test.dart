@@ -111,6 +111,31 @@ void main() {
     }
   });
 
+  testWidgets('botão "Abrir pasta" só aparece quando há destino', (tester) async {
+    final tmp = Directory.systemTemp.createTempSync('xiso_open_');
+    try {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final state = buildState(tmp);
+      await pumpApp(tester, state);
+      expect(find.text('Abrir pasta'), findsNothing);
+
+      state.setOutputDir(tmp.path);
+      await tester.pump();
+      expect(find.text('Abrir pasta'), findsOneWidget);
+
+      // trocar de aba limpa o console e volta a esconder o botão
+      await tester.tap(find.text('Listar').first);
+      await tester.pumpAndSettle();
+      expect(state.lastOutputDir, isNull);
+      expect(find.text('Abrir pasta'), findsNothing);
+    } finally {
+      tmp.deleteSync(recursive: true);
+    }
+  });
+
   testWidgets('barra de progresso mostra a contagem de arquivos', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

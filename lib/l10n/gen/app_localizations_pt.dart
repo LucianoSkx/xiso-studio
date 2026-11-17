@@ -281,4 +281,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String logSaveFailed(String message) {
     return 'Não foi possível salvar o log: $message';
   }
+
+  @override
+  String get openOutputFolder => 'Abrir pasta';
 }

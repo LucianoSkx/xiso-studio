@@ -36,12 +36,13 @@ nothing installed at runtime.
 ## Highlights
 
 - **Four modes, zero flags to memorize** — Extract, List, Create, Optimize.
-- **Real progress bar** — the app pre-counts entries with `-l` and then tracks
-  every file the tool reports, so you see `12 / 48 files` instead of a spinner.
+- **Real progress bar** — the app pre-counts entries with `-l` and then counts
+  finished files, so you see `246 / 324 files` instead of a spinner.
 - **Batches** — select many images at once; each one can extract into its own
   subfolder.
 - **Editable paths** — paste a path or use the file dialog, whichever is faster.
 - **Live log + cancel** — stdout/stderr streamed into the UI, `SIGTERM` on demand.
+  The console follows the newest line and clears itself when you switch modes.
 - **Three languages** — English, Português (BR) and Español, switchable in-app
   and remembered between sessions.
 - **One file to ship** — the `extract-xiso` binary is embedded and unpacked to

@@ -531,6 +531,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'extract-xiso v{version}'**
   String toolVersion(Object version);
+
+  /// Aviso no topo do console quando só o fim do log é exibido
+  ///
+  /// In pt, this message translates to:
+  /// **'… {count} linhas anteriores ocultas'**
+  String logHidden(int count);
 }
 
 class _AppLocalizationsDelegate

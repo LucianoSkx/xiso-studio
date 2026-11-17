@@ -1,3 +1,3 @@
 /// Versão exibida na interface. Mantida em sincronia com `pubspec.yaml`
 /// pelo teste `test/version_test.dart`.
-const String appVersion = '1.2.1';
+const String appVersion = '1.3.0';

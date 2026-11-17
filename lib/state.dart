@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show Locale;
 
@@ -35,6 +36,15 @@ class AppState extends ChangeNotifier {
   final List<String> log = [];
   Process? _proc;
 
+  /// Linhas em memória; as mais antigas saem primeiro (console com histórico).
+  static const _maxLinhas = 5000;
+
+  /// Agrupa atualizações: a ferramenta escreve dezenas de linhas por segundo
+  /// (uma por trecho de 64 KB), e notificar a cada linha trava a interface.
+  /// Acumulamos e avisamos no máximo a cada [_intervaloFlush].
+  static const _intervaloFlush = Duration(milliseconds: 60);
+  Timer? _flush;
+
   /// `null` significa "seguir o idioma do sistema".
   Locale? get locale {
     final tag = _settings.localeTag;
@@ -60,7 +70,7 @@ class AppState extends ChangeNotifier {
       final info = await toolVersion(exe!);
       version = info.version;
       ready = true;
-      log.add('extract-xiso v$version (embedded)');
+      _append('extract-xiso v$version (embedded)');
     } catch (e) {
       fatalError = '$e';
     }
@@ -84,8 +94,8 @@ class AppState extends ChangeNotifier {
     errorMessage = null;
     progressDone = 0;
     progressTotal = totalFiles;
-    if (clearLog) log.clear();
-    log.add('\$ extract-xiso ${args.join(' ')}');
+    if (clearLog) _limpar();
+    _append('\$ extract-xiso ${args.join(' ')}');
     notifyListeners();
 
     try {
@@ -95,7 +105,7 @@ class AppState extends ChangeNotifier {
         workingDirectory: cwd,
         onStart: (p) => _proc = p,
         onLine: (line) {
-          log.add(line);
+          _append(line);
           if (isFileProgressLine(line)) {
             progressDone += countProgressMarkers(line);
             // a ferramenta pode reportar um arquivo duas vezes (ex.: após aviso
@@ -112,7 +122,7 @@ class AppState extends ChangeNotifier {
       exitCode = -1;
       outcome = RunOutcome.error;
       errorMessage = '$e';
-      log.add('ERRO: $e');
+      _append('ERRO: $e');
     } finally {
       _proc = null;
       busy = false;
@@ -124,13 +134,55 @@ class AppState extends ChangeNotifier {
     final p = _proc;
     if (p == null) return;
     p.kill(ProcessSignal.sigterm);
-    log.add('— cancelled —');
+    _append('— cancelled —');
     outcome = RunOutcome.cancelled;
     notifyListeners();
   }
 
+  /// Adiciona uma linha ao console e agenda uma notificação agrupada.
+  void _append(String line) {
+    log.add(line);
+    if (log.length > _maxLinhas) {
+      log.removeRange(0, log.length - _maxLinhas);
+    }
+    _flush ??= Timer(_intervaloFlush, () {
+      _flush = null;
+      notifyListeners();
+    });
+  }
+
+  /// Esvazia o console sem notificar (o chamador avisa logo em seguida).
+  void _limpar() => log.clear();
+
+  @override
+  void dispose() {
+    _flush?.cancel();
+    _flush = null;
+    super.dispose();
+  }
+
   void clearLog() {
     log.clear();
+    _flush?.cancel();
+    _flush = null;
+    notifyListeners();
+  }
+
+  /// Zera a saída e o resultado da última execução. Chamado ao trocar de aba:
+  /// cada modo começa com o console limpo. Durante uma execução o log é do
+  /// processo em andamento e é preservado, para não perder o progresso.
+  void resetConsole() {
+    if (busy) return;
+    _flush?.cancel();
+    _flush = null;
+    log.clear();
+    outcome = RunOutcome.none;
+    exitCode = null;
+    errorMessage = null;
+    progressDone = 0;
+    progressTotal = null;
+    taskLabel = null;
+    lastOutputDir = null;
     notifyListeners();
   }
 

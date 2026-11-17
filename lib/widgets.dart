@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 
 /// Rótulo pequeno em caixa alta usado acima de campos.
 class FieldLabel extends StatelessWidget {
@@ -67,8 +68,9 @@ class PathPicker extends StatefulWidget {
 }
 
 class _PathPickerState extends State<PathPicker> {
-  late final TextEditingController _ctrl =
-      TextEditingController(text: widget.value ?? '');
+  late final TextEditingController _ctrl = TextEditingController(
+    text: widget.value ?? '',
+  );
   final FocusNode _focus = FocusNode();
 
   @override
@@ -117,7 +119,9 @@ class _PathPickerState extends State<PathPicker> {
                         },
                       ),
                 filled: true,
-                fillColor: t.colorScheme.surfaceContainerHighest.withValues(alpha: .45),
+                fillColor: t.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: .45,
+                ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -207,10 +211,14 @@ class LogPanel extends StatefulWidget {
     required this.lines,
     required this.busy,
     this.emptyText = '',
+    required this.cutLabel,
   });
   final List<String> lines;
   final bool busy;
   final String emptyText;
+
+  /// Texto da linha que avisa quantas linhas antigas não estão sendo exibidas.
+  final String Function(int count) cutLabel;
 
   @override
   State<LogPanel> createState() => _LogPanelState();
@@ -219,11 +227,48 @@ class LogPanel extends StatefulWidget {
 class _LogPanelState extends State<LogPanel> {
   final _scroll = ScrollController();
 
-  // A lista é renderizada invertida para que a linha mais nova fique no
-  // offset 0 e a vista permaneça colada ao fim enquanto a saída chega.
-  // Pular para `maxScrollExtent` aterrissa antes: a extensão é só uma
-  // estimativa até os itens (de altura variável, com quebra de linha) serem
-  // posicionados.
+  /// Enquanto verdadeiro a vista acompanha o fim da saída. Vira falso quando
+  /// o usuário rola para cima, e volta ao chegar perto do fim.
+  bool _seguir = true;
+
+  static const _margemFim = 24.0;
+
+  /// Só a rolagem feita pelo usuário desliga o acompanhamento. Escutar o
+  /// `ScrollController` não serve: quando a saída cresce a extensão muda e o
+  /// ajuste automático era lido como rolagem do usuário, desligando o modo.
+  bool _aoUsuarioRolar(ScrollNotification n) {
+    if (n is UserScrollNotification) {
+      _seguir = n.direction == ScrollDirection.idle
+          ? n.metrics.extentAfter <= _margemFim
+          : false;
+    }
+    return false;
+  }
+
+  @override
+  void didUpdateWidget(covariant LogPanel old) {
+    super.didUpdateWidget(old);
+    final terminou = old.busy && !widget.busy;
+    if (widget.lines.length != old.lines.length || terminou) {
+      // saída nova (ou execução concluída): volta a acompanhar o fim
+      _seguir = true;
+      _colarNoFim();
+    }
+  }
+
+  /// Cola a vista na última linha. `maxScrollExtent` é apenas estimado
+  /// enquanto os itens de altura variável (com quebra de linha) não foram
+  /// posicionados, então repetimos por alguns frames até a extensão parar de
+  /// crescer — um único salto para o fim para antes da última linha.
+  void _colarNoFim([int tentativa = 0]) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scroll.hasClients || !_seguir) return;
+      final antes = _scroll.position.pixels;
+      _scroll.jumpTo(_scroll.position.maxScrollExtent);
+      final andou = _scroll.position.pixels - antes;
+      if (andou > 1 && tentativa < 4) _colarNoFim(tentativa + 1);
+    });
+  }
 
   @override
   void dispose() {
@@ -231,9 +276,17 @@ class _LogPanelState extends State<LogPanel> {
     super.dispose();
   }
 
+  /// Só o fim da saída é renderizado: uma lista com milhares de itens deixa o
+  /// painel pesado a ponto de a interface parar de acompanhar o processo. O log
+  /// completo continua em memória (com limite em `AppState`).
+  static const _maxRenderizar = 1000;
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final total = widget.lines.length;
+    final corte = total > _maxRenderizar ? total - _maxRenderizar : 0;
+    final linhas = corte == 0 ? widget.lines : widget.lines.sublist(corte);
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF10131A),
@@ -247,21 +300,37 @@ class _LogPanelState extends State<LogPanel> {
                 style: t.textTheme.bodySmall?.copyWith(color: Colors.white38),
               ),
             )
-          : Scrollbar(
-              controller: _scroll,
-              child: ListView.builder(
+          : NotificationListener<ScrollNotification>(
+              onNotification: _aoUsuarioRolar,
+              child: Scrollbar(
                 controller: _scroll,
-                reverse: true,
-                padding: const EdgeInsets.all(12),
-                itemCount: widget.lines.length,
-                itemBuilder: (_, i) => Text(
-                  widget.lines[widget.lines.length - 1 - i],
-                  style: const TextStyle(
-                    color: Color(0xFFC9D1D9),
-                    fontFamily: 'monospace',
-                    fontSize: 12,
-                    height: 1.45,
-                  ),
+                child: ListView.builder(
+                  controller: _scroll,
+                  padding: const EdgeInsets.all(12),
+                  itemCount: linhas.length + (corte > 0 ? 1 : 0),
+                  itemBuilder: (_, i) {
+                    if (corte > 0 && i == 0) {
+                      return Text(
+                        widget.cutLabel(corte),
+                        style: const TextStyle(
+                          color: Color(0xFF8B949E),
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                          height: 1.45,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      );
+                    }
+                    return Text(
+                      linhas[i - (corte > 0 ? 1 : 0)],
+                      style: const TextStyle(
+                        color: Color(0xFFC9D1D9),
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        height: 1.45,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

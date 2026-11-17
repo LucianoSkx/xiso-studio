@@ -71,5 +71,14 @@
   "optimizeMulti": "Otimização {index}/{total}: {name}",
   "listLabel": "Listagem de {name}",
   "doneAllExtract": "Concluído: {count} imagens extraídas",
-  "toolVersion": "extract-xiso v{version}"
+  "toolVersion": "extract-xiso v{version}",
+  "logHidden": "… {count} linhas anteriores ocultas",
+  "@logHidden": {
+    "description": "Aviso no topo do console quando só o fim do log é exibido",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

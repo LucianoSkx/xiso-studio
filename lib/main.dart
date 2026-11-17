@@ -129,7 +129,13 @@ class _ShellState extends State<Shell> {
             Sidebar(
               modes: modes,
               selected: _mode,
-              onSelect: (i) => setState(() => _mode = i),
+              onSelect: (i) {
+                if (i == _mode) return;
+                setState(() => _mode = i);
+                // console limpo ao entrar em outro modo (preservado se houver
+                // execução em andamento)
+                _state.resetConsole();
+              },
               state: _state,
             ),
             Expanded(
@@ -458,6 +464,7 @@ class LogColumn extends StatelessWidget {
               lines: state.log,
               busy: state.busy,
               emptyText: l.logEmpty,
+              cutLabel: l.logHidden,
             ),
           ),
         ],

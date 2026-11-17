@@ -262,4 +262,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String toolVersion(Object version) {
     return 'extract-xiso v$version';
   }
+
+  @override
+  String logHidden(int count) {
+    return '… $count earlier lines hidden';
+  }
 }

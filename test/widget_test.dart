@@ -76,6 +76,41 @@ void main() {
     }
   });
 
+  testWidgets('trocar de aba limpa o console', (tester) async {
+    final tmp = Directory.systemTemp.createTempSync('xiso_tab_');
+    try {
+      // janela larga: o painel de log só aparece nesse layout
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final state = buildState(tmp);
+      await pumpApp(tester, state);
+
+      state.log.add('linha da aba Extrair');
+      state.setOutcome(RunOutcome.ok);
+      await tester.pump();
+      expect(find.text('linha da aba Extrair'), findsOneWidget);
+
+      await tester.tap(find.text('Listar').first);
+      await tester.pumpAndSettle();
+
+      expect(state.log, isEmpty);
+      expect(state.outcome, RunOutcome.none);
+      expect(find.text('linha da aba Extrair'), findsNothing);
+
+      // durante uma execução o console é preservado
+      state.log.add('saída em andamento');
+      state.busy = true;
+      await tester.pump();
+      state.resetConsole();
+      expect(state.log, contains('saída em andamento'));
+      state.busy = false;
+    } finally {
+      tmp.deleteSync(recursive: true);
+    }
+  });
+
   testWidgets('barra de progresso mostra a contagem de arquivos', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

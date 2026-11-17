@@ -98,6 +98,10 @@ class AppState extends ChangeNotifier {
           log.add(line);
           if (isFileProgressLine(line)) {
             progressDone += countProgressMarkers(line);
+            // a ferramenta pode reportar um arquivo duas vezes (ex.: após aviso
+            // de truncamento); nunca deixe o contador passar do total.
+            final total = progressTotal;
+            if (total != null) progressDone = progressDone.clamp(0, total);
           }
           notifyListeners();
         },

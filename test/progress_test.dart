@@ -3,7 +3,7 @@ import 'package:xiso_studio/xiso.dart';
 
 void main() {
   group('progresso a partir da saída da ferramenta', () {
-    test('lê a contagem do resumo ("12 files in ...")', () {
+    test('reads the count from the summary ("12 files in ...")', () {
       expect(parseEntryCount('12 files in jogo.iso total 4096 bytes'), 12);
       expect(parseEntryCount('1 files in a.iso total 5 bytes'), 1);
       expect(parseEntryCount('2 files in test.iso total 65541 bytes'), 2);
@@ -25,11 +25,16 @@ void main() {
       expect(isFileProgressLine(''), isFalse);
     });
 
-    test('conta vários marcadores numa linha só (saída com \\r)', () {
-      const chunk = 'extracting /o/a (1 bytes) [10%]\r'
-          'extracting /o/a (1 bytes) [40%]\r'
-          'extracting /o/b (2 bytes) [100%]\r';
+    test('conta só arquivos concluídos, nunca porcentagens parciais (saída com \\r)', () {
+      // a ferramenta imprime uma linha por trecho de buffer do mesmo arquivo:
+      // contar todas passaria do total (573 de 324 numa execução real).
+      const chunk = 'extracting /o/a (1048576 bytes) [10%]\r'
+          'extracting /o/a (1048576 bytes) [40%]\r'
+          'extracting /o/a (1048576 bytes) [100%]\r'
+          'extracting /o/b (2048 bytes) [100%]\r'
+          'adding /o/c (4096 bytes) [OK]\r';
       expect(countProgressMarkers(chunk), 3);
+      expect(countProgressMarkers('extracting /o/a (9 bytes) [37%]'), 0);
     });
 
     test('linhas de progresso somam o total de um lote', () {

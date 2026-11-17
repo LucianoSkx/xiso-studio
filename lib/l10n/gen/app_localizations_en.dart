@@ -225,32 +225,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String extractSingle(Object name) {
-    return 'Extracting $name';
+    return 'Extraction of $name';
   }
 
   @override
   String extractMulti(Object index, Object name, Object total) {
-    return 'Extracting $index/$total: $name';
+    return 'Extraction $index/$total: $name';
   }
 
   @override
   String createLabel(Object name) {
-    return 'Creating $name.iso';
+    return 'Creation of $name.iso';
   }
 
   @override
   String optimizeSingle(Object name) {
-    return 'Optimizing $name';
+    return 'Optimization of $name';
   }
 
   @override
   String optimizeMulti(Object index, Object name, Object total) {
-    return 'Optimizing $index/$total: $name';
+    return 'Optimization $index/$total: $name';
   }
 
   @override
   String listLabel(Object name) {
-    return 'Listing $name';
+    return 'File list of $name';
   }
 
   @override

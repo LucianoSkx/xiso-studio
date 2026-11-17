@@ -226,32 +226,32 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String extractSingle(Object name) {
-    return 'Extraindo $name';
+    return 'Extração de $name';
   }
 
   @override
   String extractMulti(Object index, Object name, Object total) {
-    return 'Extraindo $index/$total: $name';
+    return 'Extração $index/$total: $name';
   }
 
   @override
   String createLabel(Object name) {
-    return 'Criando $name.iso';
+    return 'Criação de $name.iso';
   }
 
   @override
   String optimizeSingle(Object name) {
-    return 'Otimizando $name';
+    return 'Otimização de $name';
   }
 
   @override
   String optimizeMulti(Object index, Object name, Object total) {
-    return 'Otimizando $index/$total: $name';
+    return 'Otimização $index/$total: $name';
   }
 
   @override
   String listLabel(Object name) {
-    return 'Listando $name';
+    return 'Listagem de $name';
   }
 
   @override

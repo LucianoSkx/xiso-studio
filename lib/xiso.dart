@@ -143,21 +143,27 @@ class _LineSplitter {
 /// Reconhece a linha de resumo da ferramenta: "12 files in x.iso total 456 bytes".
 final _summaryCountRe = RegExp(r'(\d+)\s+files?\s+in\s', caseSensitive: false);
 
-/// Reconhece as linhas de progresso por arquivo emitidas pela ferramenta:
-/// `extracting /out/data.bin (65536 bytes) [100%]` ou
-/// `adding /data.bin (65536 bytes) [OK]`.
+/// Uma linha por trecho de buffer enquanto a ferramenta copia cada arquivo:
+/// o mesmo arquivo emite `[12%]`, `[37%]`, … e uma última linha `[100%]` — ou
+/// `[OK]` no modo criar — então só a última conta como "concluído".
+///
+/// `extracting /out/data.bin (65536 bytes) [100%]`
+/// `adding /data.bin (65536 bytes) [OK]`
 final _fileProgressRe = RegExp(r'\((?:0|\d+) bytes\) \[', caseSensitive: false);
+final _fileDoneRe = RegExp(r'\((?:0|\d+) bytes\) \[(?:100%|OK)\]', caseSensitive: false);
 
 int? parseEntryCount(String text) {
   final m = _summaryCountRe.firstMatch(text);
   return m == null ? null : int.tryParse(m.group(1)!);
 }
 
+/// Verdadeiro para qualquer linha de progresso por arquivo, concluída ou não.
 bool isFileProgressLine(String line) => _fileProgressRe.hasMatch(line);
 
-/// Quantos marcadores de progresso existem no texto (pode haver mais de um
-/// quando a saída chega sem quebras de linha).
-int countProgressMarkers(String text) => _fileProgressRe.allMatches(text).length;
+/// Quantos arquivos o texto reporta como concluídos (pode haver mais de um
+/// quando a saída chega sem quebras de linha). Linhas parciais como `[37%]`
+/// são ignoradas, senão a contagem passa do total.
+int countProgressMarkers(String text) => _fileDoneRe.allMatches(text).length;
 
 /// Conta quantos arquivos existem dentro de uma imagem XISO, rodando `-l`
 /// (leitura só do diretório, rápida mesmo em imagens grandes).

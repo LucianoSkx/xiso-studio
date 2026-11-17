@@ -1,188 +1,217 @@
 <p align="center">
-  <img src="packaging/icons/xiso-studio-256.png" width="96" alt="XISO Studio icon"/>
+  <img src="packaging/icons/xiso-studio-128.png" width="112" alt="XISO Studio"/>
 </p>
 
 <h1 align="center">XISO Studio</h1>
 
 <p align="center">
-  <em>GUI for the Xbox XISO tool <a href="https://github.com/XboxDev/extract-xiso">extract-xiso</a>
-  — extract, list, create and optimize XISO disc images. Ships as a single ELF.</em>
+  A modern Linux desktop GUI for <code>extract-xiso</code> —
+  inspect, extract, create and optimize <strong>Xbox XISO</strong> disc images.<br/>
+  Ships as <strong>one self-contained ELF</strong>: no GTK, Dart or Flutter to install.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/platform-linux--x86__64-0E5C10" alt="Linux x86_64"/>
-  <img src="https://img.shields.io/badge/Flutter-3.47-blue" alt="Flutter 3.47"/>
-  <img src="https://img.shields.io/badge/locales-EN%20%7C%20PT--BR%20%7C%20ES-52B043" alt="Locales"/>
-  <a href="https://github.com/LucianoSkx/xiso-studio/actions"><img src="https://img.shields.io/github/actions/workflow/status/LucianoSkx/xiso-studio/ci.yml?label=CI" alt="CI"/></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-orange" alt="MIT"/></a>
+  <a href="https://github.com/LucianoSkx/xiso-studio/releases/latest"><img src="https://img.shields.io/github/v/release/LucianoSkx/xiso-studio?label=download&color=52B043" alt="Latest release"/></a>
+  <img src="https://img.shields.io/badge/platform-linux--x86__64-52B043" alt="Linux x86_64"/>
+  <img src="https://img.shields.io/badge/Flutter-3.47-027DFD" alt="Flutter"/>
+  <img src="https://img.shields.io/badge/locales-EN%20%7C%20PT--BR%20%7C%20ES-1f6feb" alt="Locales"/>
+  <a href="https://github.com/LucianoSkx/xiso-studio/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/LucianoSkx/xiso-studio/ci.yml?label=CI" alt="CI"/></a>
+  <img src="https://img.shields.io/badge/license-MIT-orange" alt="MIT"/>
 </p>
 
-> **Português:** este README continua em português mais abaixo.
+<p align="center">
+  <img src="docs/screenshot.png" width="760" alt="XISO Studio — Extract page"/>
+</p>
 
-## What is it
+---
 
-**XISO Studio** is a desktop app for Linux that wraps
-[extract-xiso](https://github.com/XboxDev/extract-xiso) with a modern GUI.
+## Why
 
-The `extract-xiso` binary (v2.7.1, statically compiled, ~970 KB) is **embedded**
-inside the app and is materialized at `~/.cache/xiso-studio/` on first run — you
-don't need to install anything else.
+`extract-xiso` is the standard tool for Xbox disc images, but it is
+command-line only: remembering `-x`, `-l`, `-c`, `-r`, `-d`, `-s`, `-m`, `-D`
+and the argument order is easy to get wrong. XISO Studio wraps it in a desktop
+app that makes the four operations obvious, shows live progress, and needs
+nothing installed at runtime.
 
-The whole app is delivered as **a single ELF file** (AppImage type-2 runtime +
-squashfs bundle): no GTK, Dart or Flutter installation required.
+## Highlights
 
-<img src="docs/screenshot.png" alt="XISO Studio screenshot" width="720"/>
+- **Four modes, zero flags to memorize** — Extract, List, Create, Optimize.
+- **Real progress bar** — the app pre-counts entries with `-l` and then tracks
+  every file the tool reports, so you see `12 / 48 files` instead of a spinner.
+- **Batches** — select many images at once; each one can extract into its own
+  subfolder.
+- **Editable paths** — paste a path or use the file dialog, whichever is faster.
+- **Live log + cancel** — stdout/stderr streamed into the UI, `SIGTERM` on demand.
+- **Three languages** — English, Português (BR) and Español, switchable in-app
+  and remembered between sessions.
+- **One file to ship** — the `extract-xiso` binary is embedded and unpacked to
+  `~/.cache/xiso-studio/` on first run.
 
-## Features
+## Install
 
-| Mode | What it does | Flags |
-|------|--------------|-------|
-| **Extract** | Expand one or more images into folders | `-x`, `-s`, `-d` |
-| **List** | Inspect the file tree without extracting | `-l` |
-| **Create** | Build an image from a folder | `-c`, `-s`, `-m` |
-| **Optimize** | Rewrite the filesystem structure to shrink the image | `-r`, `-D`, `-d` |
-
-- Editable path fields (paste a path or pick with a dialog), multi-image batches
-  with one subfolder per game.
-- **Live progress bar**: the app pre-counts the entries (`-l`) and tracks each
-  extracted/added file, showing `12 / 48 files`.
-- Real-time log of the tool output, cancel button (SIGTERM), open-output-folder.
-- **3 languages** (system/pt-BR/en/es) selectable in the sidebar, persisted in
-  `~/.config/xiso-studio/settings.json`. Adding a new language is one `.arb` file.
-- App version shown in the sidebar badge and status bar.
-
-## Install / run
-
-Download the latest `XISO-Studio-x86_64.AppImage` from the
-[Releases](https://github.com/LucianoSkx/xiso-studio/releases) page:
+### 1. Download the single ELF (recommended)
 
 ```bash
-chmod +x XISO-Studio-x86_64.AppImage
-./XISO-Studio-x86_64.AppImage
+curl -L -o XISO-Studio.AppImage \
+  https://github.com/LucianoSkx/xiso-studio/releases/latest/download/XISO-Studio-x86_64.AppImage
+chmod +x XISO-Studio.AppImage
+./XISO-Studio.AppImage
 ```
 
-Requirements at runtime: a Linux x86_64 system with X11 or Wayland and OpenGL.
-
-## Build from source
-
-Requirements: Flutter (Linux desktop), `cmake`, `ninja`, `clang`, `gtk3-dev`,
-`squashfs-tools`, `curl`.
+Optional: hook it into your application menu
 
 ```bash
+mkdir -p ~/.local/bin ~/.local/share/applications
+mv XISO-Studio.AppImage ~/.local/bin/
+cat > ~/.local/share/applications/xiso-studio.desktop <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=XISO Studio
+Exec=/home/$USER/.local/bin/XISO-Studio.AppImage %F
+Icon=xiso-studio
+Terminal=false
+Categories=Utility;FileTools;
+EOF
+```
+
+Requirements: Linux x86_64, X11 or Wayland, OpenGL. No other packages.
+
+### 2. Build from source
+
+```bash
+git clone https://github.com/LucianoSkx/xiso-studio.git
+cd xiso-studio
 flutter pub get
 
-# debug/run
-flutter run -d linux
-
-# release bundle only → build/linux/x64/release/bundle/xiso_studio
-flutter build linux --release
-
-# single ELF → dist/XISO-Studio-x86_64.AppImage
-./packaging/build-appimage.sh
+flutter run -d linux              # development
+flutter build linux --release     # bundle in build/linux/x64/release/bundle
+./packaging/build-appimage.sh     # single ELF in dist/
 ```
 
-### Update the embedded extract-xiso
+Toolchain: Flutter (Linux desktop), `cmake`, `ninja`, `clang`, `libgtk-3-dev`,
+`squashfs-tools`, `curl`.
+
+## Using it
+
+| Mode | What it does | Tool flags |
+|------|--------------|------------|
+| **Extract** | Expands one or more images into folders | `-x`, `-s`, `-d` |
+| **List** | Shows the file tree without extracting anything | `-l` |
+| **Create** | Builds a new image from a folder of game files | `-c`, `-s`, `-m` |
+| **Optimize** | Rewrites the filesystem layout to shrink the image | `-r`, `-D`, `-d` |
+
+Typical round trip:
+
+1. **Extract** → pick `game.iso`, choose a destination, press *Extract*.
+2. Edit the files with any tool.
+3. **Create** → point at the edited folder, choose where the new `.iso` goes.
+4. **Optimize** → rewrite the result; the output is usually smaller.
+
+Options that mirror the CLI:
+
+| UI option | Flag | Meaning |
+|---|---|---|
+| Skip the `$SystemUpdate` folder | `-s` | Do not extract the bundled dashboard updates |
+| Do not patch media flags on `.xbe` | `-m` | *Not recommended* — the game may not be recognized |
+| One subfolder per image | — | Keeps batch extractions from mixing together |
+| Delete the original after optimizing | `-D` | Irreversible |
+
+## How it works
+
+```
+XISO-Studio-x86_64.AppImage   ← one ELF: AppImage runtime + squashfs
+└── usr/bin/
+    ├── xiso_studio           ← Flutter runner
+    ├── data/                 ← assets, fonts, icudtl
+    │   └── flutter_assets/assets/bin/extract-xiso  ← static binary, ~970 KB
+    └── lib/                  ← libapp.so, engine
+```
+
+`extract-xiso` v2.7.1 is compiled once with
+`gcc -O2 -D__LINUX__ -static extract-xiso.c` (no shared libraries at all), shipped
+as a Flutter asset and materialized with `chmod +x` into
+`~/.cache/xiso-studio/extract-xiso` on startup. The app then runs it as a child
+process and streams the output into the UI.
+
+To refresh the bundled tool:
 
 ```bash
-cd ~/Projetos/extract-xiso && git pull
-gcc -O2 -D__LINUX__ -static -o assets/bin/extract-xiso extract-xiso.c
-./packaging/build-appimage.sh
+cd /path/to/extract-xiso && git pull
+gcc -O2 -D__LINUX__ -static -o /path/to/xiso-studio/assets/bin/extract-xiso extract-xiso.c
+cd /path/to/xiso-studio && ./packaging/build-appimage.sh
+```
+
+## Internationalization
+
+`flutter gen-l10n` + three ARB files in [`lib/l10n/`](lib/l10n). The sidebar
+picker stores the choice in `~/.config/xiso-studio/settings.json`. Adding a
+language is one new `app_xx.arb` file — the test suite fails if a locale has
+missing keys, empty strings or mismatched `{placeholders}`.
+
+## Development
+
+```
+lib/main.dart      app shell: theme, sidebar, log panel, status bar, language menu
+lib/pages.dart     the four mode pages
+lib/widgets.dart   PathPicker, OptionTile, LogPanel, ProgressStrip
+lib/state.dart     AppState: run orchestration, progress, log, cancel
+lib/args.dart      pure argument builders (unit-tested)
+lib/xiso.dart      embedded-tool extraction, process runner, progress parsing
+lib/settings.dart  persisted preferences
+lib/l10n/          ARB sources + generated localizations
+assets/bin/        the statically linked extract-xiso
+packaging/         AppImage script, icon source (SVG → PNGs), icon candidates
 ```
 
 ## Quality
 
-`flutter analyze` is clean and the suite (`flutter test`) covers:
-
-- **Unit**: argument building for every mode (including the option-order trap
-  around `-c`), progress parsing from real tool output, file counting,
-  `$SystemUpdate` skipping.
-- **i18n**: all locales share the exact same keys and placeholders.
-- **Version**: the displayed version is asserted against `pubspec.yaml`.
-- **Widget**: shell renders, language switching (pt → en → es, persisted), the
-  progress bar.
-- **E2E**: real flows through the UI — type paths, click **Extract**, verify the
-  files on disk; and **Create** a real XISO and re-list it with the tool.
-
-CI runs everything on every push
-([workflow](.github/workflows/ci.yml)); a tagged `v*` builds the AppImage and
-uploads it to the release ([workflow](.github/workflows/release.yml)).
-
-## Project layout
-
-```
-lib/main.dart      shell: theming (Xbox-green), sidebar, log panel, status bar
-lib/pages.dart     the four modes
-lib/widgets.dart   PathPicker, OptionTile, LogPanel, ProgressStrip
-lib/state.dart     AppState: execution, progress, log, cancellation
-lib/args.dart      pure, testable argument builders
-lib/xiso.dart      embedded-tool extraction + process runner + progress parsing
-lib/l10n/*.arb     translations (pt, en, es)
-packaging/         AppImage script, icon (SVG source + PNGs), runtime
-assets/bin/        the statically-linked extract-xiso
-```
-
-## License
-
-App: [MIT](LICENSE) © 2026 LucianoSkx.
-
-`extract-xiso` is by *in* &lt;in@fishtank.com&gt; / the XboxDev organization, under
-its own license ([NOTICE-extract-xiso.txt](NOTICE-extract-xiso.txt)). This project
-is an independent front-end and is **not affiliated with Microsoft**; Xbox is a
-trademark of Microsoft Corporation.
-
----
-
-# Português
-
-## O que é
-
-**XISO Studio** é um aplicativo de desktop para Linux que embrulha o
-[extract-xiso](https://github.com/XboxDev/extract-xiso) numa interface gráfica
-moderna.
-
-- O binário do `extract-xiso` v2.7.1 (compilado estático, ~970 KB) vai
-  **embutido** no app e é materializado em `~/.cache/xiso-studio/` no primeiro
-  uso.
-- O app inteiro é entregue como **um único ELF** (AppImage): não é preciso
-  instalar GTK, Dart nem Flutter.
-- Quatro modos: **Extrair**, **Listar**, **Criar** e **Otimizar**, com
-  **barra de progresso em tempo real**, log da saída, cancelamento, caminhos
-  editáveis e suporte a lote.
-- **3 idiomas**: sistema, português (BR), inglês e espanhol — trocáveis na
-  barra lateral e persistidos em `~/.config/xiso-studio/settings.json`.
-
-## Uso
-
 ```bash
-chmod +x XISO-Studio-x86_64.AppImage
-./XISO-Studio-x86_64.AppImage
+flutter analyze     # no issues
+flutter test        # 25 tests
 ```
 
-Escolha o arquivo `.iso`/`.xiso` (ou cole o caminho), decida a pasta de destino
-e clique em **Extrair**. A aba **Criar** monta uma imagem a partir de uma pasta
-com o conteúdo do jogo; **Otimizar** reescreve a imagem para reduzir o tamanho.
+| Suite | Covers |
+|---|---|
+| `args_test` | every mode's argv, including the `-c`-swallows-the-next-arg trap |
+| `progress_test` | parsing real tool output: per-file lines, summaries, `\r` chunks |
+| `l10n_test` | identical keys, no empty strings, matching placeholders across locales |
+| `version_test` | displayed version equals `pubspec.yaml` |
+| `widget_test` | shell renders, language switch (pt→en→es, persisted), progress bar |
+| `flow_test` | end-to-end through the UI: type paths, click Extract, verify files on disk; Create a real XISO and list it back |
+| `xiso_test` | embedded tool extraction, create/list/extract against a real image |
 
-## Build
+GitHub Actions runs analyze + tests on every push
+([`ci.yml`](.github/workflows/ci.yml)); a `v*` tag builds the AppImage and
+attaches it to the release ([`release.yml`](.github/workflows/release.yml)).
 
-```bash
-flutter pub get
-flutter run -d linux            # desenvolvimento
-./packaging/build-appimage.sh   # ELF único em dist/ (rode os testes no CI)
-```
+## Troubleshooting
 
-## Testes e QA
+**`AppImages require FUSE to run`** — install `fuse2`/`libfuse2`, or run
+`./XISO-Studio.AppImage --appimage-extract-and-run`.
 
-```bash
-flutter analyze && flutter test
-```
+**Nothing happens on Wayland** — the app uses the native Wayland backend; if your
+compositor has issues, force XWayland with `GDK_BACKEND=x11 ./XISO-Studio.AppImage`.
 
-A suíte cobre argumentos, parsing de progresso, traduções, versão, troca de
-idioma na UI e fluxos de ponta a ponta (extração e criação reais pela
-interface). Toda alteração roda o CI automático.
+**`extract-xiso: cannot execute`** — delete the cache with
+`rm -rf ~/.cache/xiso-studio` and start the app again; the embedded binary is
+re-extracted automatically.
 
-## Licença
+**The tool refuses my image** — XISO Studio is a front-end; anything `extract-xiso`
+rejects will show up verbatim in the log panel. Check the image is really an Xbox
+XISO (`-l` should list files).
 
-App: [MIT](LICENSE) © 2026 LucianoSkx. O `extract-xiso` pertence a *in* /
-XboxDev com licença própria ([NOTICE-extract-xiso.txt](NOTICE-extract-xiso.txt)).
-Projeto independente, **não afiliado à Microsoft**; Xbox é marca registrada da
-Microsoft Corporation.
+## Contributing
+
+Issues and pull requests are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Run `flutter analyze && flutter test` before opening a PR.
+
+## Credits & license
+
+- App: **MIT** © 2026 [LucianoSkx](https://github.com/LucianoSkx) — see [LICENSE](LICENSE).
+- `extract-xiso`: by *in* &lt;in@fishtank.com&gt; and the
+  [XboxDev](https://github.com/XboxDev/extract-xiso) organization, under its own
+  license — see [NOTICE-extract-xiso.txt](NOTICE-extract-xiso.txt).
+- Built with [Flutter](https://flutter.dev) (Material 3); file dialogs by
+  [`file_selector`](https://pub.dev/packages/file_selector).
+- Independent project, **not affiliated with Microsoft**; Xbox is a trademark of
+  Microsoft Corporation.

@@ -219,17 +219,11 @@ class LogPanel extends StatefulWidget {
 class _LogPanelState extends State<LogPanel> {
   final _scroll = ScrollController();
 
-  @override
-  void didUpdateWidget(covariant LogPanel old) {
-    super.didUpdateWidget(old);
-    if (widget.lines.length != old.lines.length) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scroll.hasClients) {
-          _scroll.jumpTo(_scroll.position.maxScrollExtent);
-        }
-      });
-    }
-  }
+  // A lista é renderizada invertida para que a linha mais nova fique no
+  // offset 0 e a vista permaneça colada ao fim enquanto a saída chega.
+  // Pular para `maxScrollExtent` aterrissa antes: a extensão é só uma
+  // estimativa até os itens (de altura variável, com quebra de linha) serem
+  // posicionados.
 
   @override
   void dispose() {
@@ -257,10 +251,11 @@ class _LogPanelState extends State<LogPanel> {
               controller: _scroll,
               child: ListView.builder(
                 controller: _scroll,
+                reverse: true,
                 padding: const EdgeInsets.all(12),
                 itemCount: widget.lines.length,
                 itemBuilder: (_, i) => Text(
-                  widget.lines[i],
+                  widget.lines[widget.lines.length - 1 - i],
                   style: const TextStyle(
                     color: Color(0xFFC9D1D9),
                     fontFamily: 'monospace',

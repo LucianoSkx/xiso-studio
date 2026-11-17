@@ -64,12 +64,12 @@
   "entriesFound": "{count} entries found",
   "progressFiles": "{done} / {total} files",
   "imagesSelected": "{count} images selected",
-  "extractSingle": "Extracting {name}",
-  "extractMulti": "Extracting {index}/{total}: {name}",
-  "createLabel": "Creating {name}.iso",
-  "optimizeSingle": "Optimizing {name}",
-  "optimizeMulti": "Optimizing {index}/{total}: {name}",
-  "listLabel": "Listing {name}",
+  "extractSingle": "Extraction of {name}",
+  "extractMulti": "Extraction {index}/{total}: {name}",
+  "createLabel": "Creation of {name}.iso",
+  "optimizeSingle": "Optimization of {name}",
+  "optimizeMulti": "Optimization {index}/{total}: {name}",
+  "listLabel": "File list of {name}",
   "doneAllExtract": "Done: {count} images extracted",
   "toolVersion": "extract-xiso v{version}"
 }

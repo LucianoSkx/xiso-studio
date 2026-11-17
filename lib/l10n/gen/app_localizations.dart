@@ -487,37 +487,37 @@ abstract class AppLocalizations {
   /// No description provided for @extractSingle.
   ///
   /// In pt, this message translates to:
-  /// **'Extraindo {name}'**
+  /// **'Extração de {name}'**
   String extractSingle(Object name);
 
   /// No description provided for @extractMulti.
   ///
   /// In pt, this message translates to:
-  /// **'Extraindo {index}/{total}: {name}'**
+  /// **'Extração {index}/{total}: {name}'**
   String extractMulti(Object index, Object name, Object total);
 
   /// No description provided for @createLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Criando {name}.iso'**
+  /// **'Criação de {name}.iso'**
   String createLabel(Object name);
 
   /// No description provided for @optimizeSingle.
   ///
   /// In pt, this message translates to:
-  /// **'Otimizando {name}'**
+  /// **'Otimização de {name}'**
   String optimizeSingle(Object name);
 
   /// No description provided for @optimizeMulti.
   ///
   /// In pt, this message translates to:
-  /// **'Otimizando {index}/{total}: {name}'**
+  /// **'Otimização {index}/{total}: {name}'**
   String optimizeMulti(Object index, Object name, Object total);
 
   /// No description provided for @listLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Listando {name}'**
+  /// **'Listagem de {name}'**
   String listLabel(Object name);
 
   /// No description provided for @doneAllExtract.

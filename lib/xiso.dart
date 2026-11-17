@@ -72,7 +72,7 @@ Future<int> runExtractXiso({
     runInShell: false,
   );
   onStart?.call(process);
-  final completer = Completer<int>();
+
   final sb = StringBuffer();
   final sink = _LineSplitter(onLine);
 
@@ -88,16 +88,31 @@ Future<int> runExtractXiso({
     }
   }
 
-  process.stdout.listen(feed, onError: (_) {});
-  process.stderr.listen(feed, onError: (_) {});
+  // Espera os dois pipes terminarem antes de ler o exit code: o processo pode
+  // sair antes das últimas linhas serem entregues pelo sistema (corrida que
+  // aparecia justamente em máquinas rápidas, como o CI).
+  final outDone = Completer<void>();
+  final errDone = Completer<void>();
+  process.stdout.listen(
+    feed,
+    onError: (_) {},
+    onDone: () {
+      if (!outDone.isCompleted) outDone.complete();
+    },
+  );
+  process.stderr.listen(
+    feed,
+    onError: (_) {},
+    onDone: () {
+      if (!errDone.isCompleted) errDone.complete();
+    },
+  );
 
-  process.exitCode.then((code) {
-    if (sb.isNotEmpty) sink.add(sb.toString());
-    sink.flush();
-    completer.complete(code);
-  });
-
-  return completer.future;
+  final code = await process.exitCode;
+  await Future.wait([outDone.future, errDone.future]);
+  if (sb.isNotEmpty) sink.add(sb.toString());
+  sink.flush();
+  return code;
 }
 
 /// Divide texto em linhas, chamando o callback para cada uma.

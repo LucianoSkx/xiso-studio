@@ -46,8 +46,10 @@ Toolchain: Flutter 3.47.x (Linux desktop), `cmake`, `ninja`, `clang`,
 3. If you add a UI string, add the key to **every** `lib/l10n/app_*.arb`
    (`flutter test test/l10n_test.dart` fails otherwise).
 4. `flutter analyze` and `flutter test` must pass; CI runs both.
-5. Write commit messages in the imperative mood, e.g.
-   `fix: wait for pipe EOF before reading the exit code`.
+5. Write commit messages in English, in the imperative mood and with a
+   Conventional Commits prefix, e.g.
+   `fix: wait for pipe EOF before reading the exit code`. Code comments and test
+   names stay in Portuguese (pt-BR), matching the existing files.
 
 ## Translations
 

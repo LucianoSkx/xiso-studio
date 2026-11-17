@@ -36,7 +36,7 @@ void main() {
       expect(find.text('Criar'), findsWidgets);
       expect(find.text('Otimizar'), findsWidgets);
       // versão do app no rodapé e no selo da barra lateral
-      expect(find.text('v$appVersion'), findsOneWidget);
+      expect(find.text('v$appVersion'), findsWidgets); // chip do diálogo + rodapé
       expect(find.text(appVersion), findsOneWidget);
     } finally {
       tmp.deleteSync(recursive: true);
@@ -153,6 +153,36 @@ void main() {
       await tester.tap(find.text('jogo-velho.iso'));
       await tester.pumpAndSettle();
       expect(find.text('/tmp/jogo-velho.iso'), findsWidgets);
+    } finally {
+      tmp.deleteSync(recursive: true);
+    }
+  });
+
+  testWidgets('diálogo Sobre mostra detalhes e botão do GitHub', (tester) async {
+    final tmp = Directory.systemTemp.createTempSync('xiso_about_');
+    try {
+      tester.view.physicalSize = const Size(1400, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final state = buildState(tmp);
+      state.version = '2.7.1';
+      state.ready = true;
+      await pumpApp(tester, state);
+
+      await tester.tap(find.byIcon(Icons.info_outline));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Detalhes'), findsOneWidget);
+      expect(find.text('v$appVersion'), findsWidgets); // chip do diálogo + rodapé
+      expect(find.text('extract-xiso'), findsWidgets);
+      expect(find.text('2.7.1'), findsOneWidget);
+      expect(find.text('Abrir no GitHub'), findsOneWidget);
+      expect(find.byIcon(Icons.code), findsOneWidget);
+      expect(find.text('Licenças'), findsOneWidget);
+
+      await tester.tap(find.text('Fechar'));
+      await tester.pumpAndSettle();
+      expect(find.text('Detalhes'), findsNothing);
     } finally {
       tmp.deleteSync(recursive: true);
     }

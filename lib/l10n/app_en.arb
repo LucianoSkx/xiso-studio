@@ -60,7 +60,6 @@
   "languageEnglish": "English",
   "languageSpanish": "Español",
   "aboutTitle": "About XISO Studio",
-  "aboutBody": "A graphical front-end for extract-xiso (v{version}).\nThe extract-xiso binary is embedded in this executable.\nBuilt by LucianoSkx.",
   "entriesFound": "{count} entries found",
   "progressFiles": "{done} / {total} files",
   "imagesSelected": "{count} images selected",
@@ -110,5 +109,61 @@
   "recentLabel": "Recent images",
   "@recentLabel": {
     "description": "Tooltip of the history button in the image field"
+  },
+  "actionClose": "Close",
+  "@actionClose": {
+    "description": "Button that closes the dialog"
+  },
+  "aboutTagline": "Xbox XISO images, without the command line",
+  "@aboutTagline": {
+    "description": "Short line under the name in About"
+  },
+  "aboutBuildTitle": "Details",
+  "@aboutBuildTitle": {
+    "description": "Header of the information list in About"
+  },
+  "aboutApp": "Application",
+  "@aboutApp": {
+    "description": "Label for the app version"
+  },
+  "aboutTool": "extract-xiso",
+  "@aboutTool": {
+    "description": "Label for the embedded tool version"
+  },
+  "aboutSystem": "Platform",
+  "@aboutSystem": {
+    "description": "Label for the system the app runs on"
+  },
+  "aboutRuntime": "Flutter / Dart",
+  "@aboutRuntime": {
+    "description": "Label for the runtime version"
+  },
+  "aboutLicense": "License",
+  "@aboutLicense": {
+    "description": "Label for the license"
+  },
+  "aboutMadeBy": "MIT · built by LucianoSkx and contributors",
+  "@aboutMadeBy": {
+    "description": "Credit line in About"
+  },
+  "aboutOpenRepo": "Open on GitHub",
+  "@aboutOpenRepo": {
+    "description": "Button that opens the project repository"
+  },
+  "aboutLicenses": "Licenses",
+  "@aboutLicenses": {
+    "description": "Button that shows third-party licenses"
+  },
+  "aboutCopy": "Copy details",
+  "@aboutCopy": {
+    "description": "Tooltip of the button that copies the information"
+  },
+  "aboutCopied": "Details copied",
+  "@aboutCopied": {
+    "description": "Notice after copying the information"
+  },
+  "aboutLegal": "MIT © 2026 LucianoSkx. extract-xiso carries its own license, see NOTICE-extract-xiso.txt. Independent project, not affiliated with Microsoft; Xbox is a trademark of Microsoft Corporation.",
+  "@aboutLegal": {
+    "description": "Legal text shown in the licenses dialog"
   }
 }

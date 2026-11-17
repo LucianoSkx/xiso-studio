@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'about_dialog.dart';
 import 'l10n_ext.dart';
 import 'log_export.dart';
 import 'notify.dart';
@@ -345,20 +346,7 @@ class Sidebar extends StatelessWidget {
               ),
               IconButton(
                 tooltip: l.menuAbout,
-                onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (_) => AboutDialog(
-                    applicationName: l.appName,
-                    applicationVersion: appVersion,
-                    applicationLegalese: l.aboutBody(state.version),
-                    applicationIcon: Image.asset(
-                      'packaging/icons/xiso-studio-128.png',
-                      width: 48,
-                      height: 48,
-                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                    ),
-                  ),
-                ),
+                onPressed: () => showXisoAbout(context, state),
                 icon: const Icon(Icons.info_outline, size: 18),
               ),
             ],

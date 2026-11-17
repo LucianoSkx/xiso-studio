@@ -460,12 +460,6 @@ abstract class AppLocalizations {
   /// **'Sobre o XISO Studio'**
   String get aboutTitle;
 
-  /// No description provided for @aboutBody.
-  ///
-  /// In pt, this message translates to:
-  /// **'Interface gráfica para o extract-xiso (v{version}).\nO binário do extract-xiso vai embutido neste executável.\nDesenvolvido por LucianoSkx.'**
-  String aboutBody(Object version);
-
   /// No description provided for @entriesFound.
   ///
   /// In pt, this message translates to:
@@ -567,6 +561,90 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Imagens recentes'**
   String get recentLabel;
+
+  /// Botão que fecha o diálogo
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get actionClose;
+
+  /// Frase curta abaixo do nome no Sobre
+  ///
+  /// In pt, this message translates to:
+  /// **'Imagens XISO do Xbox, sem linha de comando'**
+  String get aboutTagline;
+
+  /// Cabeçalho da lista de informações do Sobre
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes'**
+  String get aboutBuildTitle;
+
+  /// Rótulo da versão do app
+  ///
+  /// In pt, this message translates to:
+  /// **'Aplicativo'**
+  String get aboutApp;
+
+  /// Rótulo da versão da ferramenta embarcada
+  ///
+  /// In pt, this message translates to:
+  /// **'extract-xiso'**
+  String get aboutTool;
+
+  /// Rótulo do sistema onde o app está rodando
+  ///
+  /// In pt, this message translates to:
+  /// **'Plataforma'**
+  String get aboutSystem;
+
+  /// Rótulo da versão do runtime
+  ///
+  /// In pt, this message translates to:
+  /// **'Flutter / Dart'**
+  String get aboutRuntime;
+
+  /// Rótulo da licença
+  ///
+  /// In pt, this message translates to:
+  /// **'Licença'**
+  String get aboutLicense;
+
+  /// Crédito no rodapé do Sobre
+  ///
+  /// In pt, this message translates to:
+  /// **'MIT · feito por LucianoSkx e colaboradores'**
+  String get aboutMadeBy;
+
+  /// Botão que abre o repositório do projeto
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir no GitHub'**
+  String get aboutOpenRepo;
+
+  /// Botão que mostra as licenças de terceiros
+  ///
+  /// In pt, this message translates to:
+  /// **'Licenças'**
+  String get aboutLicenses;
+
+  /// Dica do botão que copia as informações
+  ///
+  /// In pt, this message translates to:
+  /// **'Copiar detalhes'**
+  String get aboutCopy;
+
+  /// Aviso após copiar as informações
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes copiados'**
+  String get aboutCopied;
+
+  /// Texto legal do diálogo de licenças
+  ///
+  /// In pt, this message translates to:
+  /// **'MIT © 2026 LucianoSkx. extract-xiso tem licença própria, ver NOTICE-extract-xiso.txt. Projeto independente, sem vínculo com a Microsoft; Xbox é marca da Microsoft Corporation.'**
+  String get aboutLegal;
 }
 
 class _AppLocalizationsDelegate

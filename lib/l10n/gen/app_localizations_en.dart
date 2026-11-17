@@ -204,11 +204,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutTitle => 'About XISO Studio';
 
   @override
-  String aboutBody(Object version) {
-    return 'A graphical front-end for extract-xiso (v$version).\nThe extract-xiso binary is embedded in this executable.\nBuilt by LucianoSkx.';
-  }
-
-  @override
   String entriesFound(Object count) {
     return '$count entries found';
   }
@@ -286,4 +281,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentLabel => 'Recent images';
+
+  @override
+  String get actionClose => 'Close';
+
+  @override
+  String get aboutTagline => 'Xbox XISO images, without the command line';
+
+  @override
+  String get aboutBuildTitle => 'Details';
+
+  @override
+  String get aboutApp => 'Application';
+
+  @override
+  String get aboutTool => 'extract-xiso';
+
+  @override
+  String get aboutSystem => 'Platform';
+
+  @override
+  String get aboutRuntime => 'Flutter / Dart';
+
+  @override
+  String get aboutLicense => 'License';
+
+  @override
+  String get aboutMadeBy => 'MIT · built by LucianoSkx and contributors';
+
+  @override
+  String get aboutOpenRepo => 'Open on GitHub';
+
+  @override
+  String get aboutLicenses => 'Licenses';
+
+  @override
+  String get aboutCopy => 'Copy details';
+
+  @override
+  String get aboutCopied => 'Details copied';
+
+  @override
+  String get aboutLegal =>
+      'MIT © 2026 LucianoSkx. extract-xiso carries its own license, see NOTICE-extract-xiso.txt. Independent project, not affiliated with Microsoft; Xbox is a trademark of Microsoft Corporation.';
 }

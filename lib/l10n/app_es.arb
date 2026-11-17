@@ -44,7 +44,6 @@
   "logHeader": "SALIDA",
   "logEmpty": "El log de la ejecución aparece aquí.",
   "statusInitializing": "inicializando…",
-  "statusReady": "extract-xiso v{version} incluido y listo",
   "statusDone": "Listo: {label}",
   "statusFailed": "Falló (código {code}): {label}",
   "statusCancelled": "Cancelado",

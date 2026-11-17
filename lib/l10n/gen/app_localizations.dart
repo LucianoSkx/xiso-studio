@@ -364,12 +364,6 @@ abstract class AppLocalizations {
   /// **'inicializando…'**
   String get statusInitializing;
 
-  /// No description provided for @statusReady.
-  ///
-  /// In pt, this message translates to:
-  /// **'extract-xiso v{version} embarcado e pronto'**
-  String statusReady(Object version);
-
   /// No description provided for @statusDone.
   ///
   /// In pt, this message translates to:

@@ -148,11 +148,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusInitializing => 'initializing…';
 
   @override
-  String statusReady(Object version) {
-    return 'extract-xiso v$version embedded and ready';
-  }
-
-  @override
   String statusDone(Object label) {
     return 'Done: $label';
   }

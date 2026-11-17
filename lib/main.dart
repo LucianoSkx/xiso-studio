@@ -551,11 +551,13 @@ class LogColumn extends StatelessWidget {
 /// Texto do rodapé para o estado atual; também usado na notificação.
 String statusMessage(AppLocalizations l, AppState state) {
   return switch (state.outcome) {
+    // parado e sem tarefa: rodapé sem texto (a versão da ferramenta já
+    // aparece na barra lateral)
     RunOutcome.none => state.ready
-        ? l.statusReady(state.version)
+        ? ''
         : (state.fatalError == null ? l.statusInitializing : l.statusToolFailed),
     RunOutcome.ok => state.taskLabel == null
-        ? (state.ready ? l.statusReady(state.version) : '')
+        ? ''
         : l.statusDone(state.taskLabel!),
     RunOutcome.failed => l.statusFailed(state.exitCode ?? -1, state.taskLabel ?? ''),
     RunOutcome.cancelled => l.statusCancelled,
@@ -595,9 +597,9 @@ class StatusBar extends StatelessWidget {
               height: 12,
               child: CircularProgressIndicator(strokeWidth: 2),
             )
-          else
+          else if (text.isNotEmpty)
             Icon(icon, size: 14, color: color),
-          const SizedBox(width: 8),
+          if (state.busy || text.isNotEmpty) const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,

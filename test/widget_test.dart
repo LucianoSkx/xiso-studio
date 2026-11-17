@@ -188,6 +188,25 @@ void main() {
     }
   });
 
+  testWidgets('rodapé fica sem texto quando não há tarefa', (tester) async {
+    final tmp = Directory.systemTemp.createTempSync('xiso_status_');
+    try {
+      final state = buildState(tmp);
+      state.version = '2.7.1';
+      state.ready = true;
+      await pumpApp(tester, state);
+
+      // nada de repetir a versão da ferramenta no rodapé
+      expect(find.textContaining('embarcado'), findsNothing);
+      expect(
+        find.descendant(of: find.byType(StatusBar), matching: find.text('')),
+        findsOneWidget,
+      );
+    } finally {
+      tmp.deleteSync(recursive: true);
+    }
+  });
+
   testWidgets('barra de progresso mostra a contagem de arquivos', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

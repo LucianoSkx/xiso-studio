@@ -149,11 +149,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statusInitializing => 'inicializando…';
 
   @override
-  String statusReady(Object version) {
-    return 'extract-xiso v$version embarcado e pronto';
-  }
-
-  @override
   String statusDone(Object label) {
     return 'Concluído: $label';
   }

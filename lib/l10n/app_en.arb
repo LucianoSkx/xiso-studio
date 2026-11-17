@@ -44,7 +44,6 @@
   "logHeader": "OUTPUT",
   "logEmpty": "Command output appears here.",
   "statusInitializing": "initializing…",
-  "statusReady": "extract-xiso v{version} embedded and ready",
   "statusDone": "Done: {label}",
   "statusFailed": "Failed (exit {code}): {label}",
   "statusCancelled": "Cancelled",

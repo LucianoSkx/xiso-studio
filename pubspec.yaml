@@ -1,0 +1,28 @@
+name: xiso_studio
+description: "GUI para extract-xiso: extrair, listar, criar e otimizar imagens XISO de Xbox."
+publish_to: 'none'
+version: 1.1.0+1
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  file_selector: ^1.1.0
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/bin/extract-xiso
+    - packaging/icons/xiso-studio-128.png

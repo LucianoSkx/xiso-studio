@@ -1,0 +1,14 @@
+# Flutter / Dart
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+
+# artefatos locais
+dist/
+.shots/
+packaging/runtime-x86_64
+
+# IDE
+.idea/

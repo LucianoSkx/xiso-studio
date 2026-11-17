@@ -62,10 +62,20 @@ Published builds live under [Releases](https://github.com/LucianoSkx/xiso-studio
 Once a release is out:
 
 ```bash
+# troque 1.0.0 pela versão que quiser (o nome do arquivo tem a versão)
 curl -L -o XISO-Studio.AppImage \
-  https://github.com/LucianoSkx/xiso-studio/releases/latest/download/XISO-Studio-x86_64.AppImage
+  https://github.com/LucianoSkx/xiso-studio/releases/download/v1.0.0/XISO-Studio-1.0.0-x86_64.AppImage
 chmod +x XISO-Studio.AppImage
 ./XISO-Studio.AppImage
+```
+
+Each release ships `XISO-Studio-<version>-x86_64.AppImage` and its
+`…AppImage.zsync`. The AppImage embeds update information, so
+[AppImageUpdate](https://github.com/AppImageCommunity/AppImageUpdate) can fetch
+only the changed blocks instead of the whole 10 MB:
+
+```bash
+appimageupdatetool XISO-Studio-1.0.0-x86_64.AppImage
 ```
 
 No release yet? Build it from source — same result, no dependencies on the target
@@ -139,7 +149,7 @@ Options that mirror the CLI:
 ## How it works
 
 ```
-XISO-Studio-x86_64.AppImage   ← one ELF: AppImage runtime + squashfs
+XISO-Studio-1.0.0-x86_64.AppImage  ← one ELF: runtime + squashfs (+ .zsync)
 └── usr/bin/
     ├── xiso_studio           ← Flutter runner
     ├── data/                 ← assets, fonts, icudtl

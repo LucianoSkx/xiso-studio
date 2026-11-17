@@ -6,12 +6,12 @@
 set -u
 AQUI="$(cd "$(dirname "$0")/.." && pwd)"
 DESTINO="${1:-$HOME}"
-APP_FONT="$AQUI/dist/XISO-Studio-x86_64.AppImage"
+APP_FONT="$(ls -t "$AQUI"/dist/XISO-Studio-*-x86_64.AppImage 2>/dev/null | head -1)"
 APP_INST="$DESTINO/AppImages/xiso_studio.appimage"
 ICONS_DIR="$DESTINO/.local/share/icons/hicolor"
 APPS_DIR="$DESTINO/.local/share/applications"
 
-if [ ! -f "$APP_FONT" ]; then
+if [ -z "${APP_FONT:-}" ] || [ ! -f "$APP_FONT" ]; then
   echo "AppImage não encontrado em $APP_FONT — rode ./packaging/build-appimage.sh antes." >&2
   exit 1
 fi

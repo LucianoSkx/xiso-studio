@@ -12,3 +12,5 @@ packaging/runtime-x86_64
 
 # IDE
 .idea/
+packaging/.tools/
+__pycache__/

@@ -16,10 +16,17 @@ APP_NAME="XISO-Studio"
 WD="$(mktemp -d)"
 trap 'rm -rf "$WD"' EXIT
 
-echo "==> 1/4  build release do Flutter"
+# versão vem do proprio código, para o nome do arquivo nunca divergir do app
+VERSION="$(sed -n "s/^const String appVersion = '\(.*\)';$/\1/p" "$ROOT/lib/version.dart")"
+[ -n "$VERSION" ] || { echo "não consegui ler a versão em lib/version.dart" >&2; exit 1; }
+OUT="$OUT_DIR/$APP_NAME-$VERSION-x86_64.AppImage"
+# informação de atualização: o AppImageUpdate baixa o .zsync deste release
+UPDATE_INFO="gh-releases-zsync|LucianoSkx|xiso-studio|latest|$APP_NAME-*-x86_64.AppImage.zsync"
+
+echo "==> 1/5  build release do Flutter"
 flutter build linux --release
 
-echo "==> 2/4  montando AppDir"
+echo "==> 2/5  montando AppDir"
 APPDIR="$WD/AppDir"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/share/applications" \
          "$APPDIR/usr/share/metainfo"
@@ -81,7 +88,7 @@ cat > "$APPDIR/usr/share/metainfo/xiso-studio.appdata.xml" <<'META'
 </component>
 META
 
-echo "==> 3/4  obtendo o runtime do AppImage"
+echo "==> 3/5  obtendo o runtime do AppImage"
 RUNTIME="$ROOT/packaging/runtime-x86_64"
 if [ ! -x "$RUNTIME" ]; then
   curl -fsSL -o "$RUNTIME" \
@@ -89,15 +96,42 @@ if [ ! -x "$RUNTIME" ]; then
   chmod +x "$RUNTIME"
 fi
 
-echo "==> 4/4  empacotando o ELF único"
+echo "==> 4/5  empacotando o ELF único"
 mkdir -p "$OUT_DIR"
-rm -f "$OUT_DIR/$APP_NAME-x86_64.AppImage"
+rm -f "$OUT" "$OUT.zsync"
 mksquashfs "$APPDIR" "$WD/app.squashfs" \
   -root-owned -noappend -comp zstd -b 262144 -no-progress >/dev/null
-cat "$RUNTIME" "$WD/app.squashfs" > "$OUT_DIR/$APP_NAME-x86_64.AppImage"
-chmod +x "$OUT_DIR/$APP_NAME-x86_64.AppImage"
+cat "$RUNTIME" "$WD/app.squashfs" > "$OUT"
+chmod +x "$OUT"
+
+echo "==> 5/5  update information e .zsync"
+python3 "$ROOT/packaging/patch-appimage.py" "$OUT" "$UPDATE_INFO"
+
+# zsyncmake: usa o do sistema, o que estiver em packaging/.tools, ou baixa um
+# pacote do Ubuntu (sem root) só para o build local
+ZSYNCMAKE="$(command -v zsyncmake || true)"
+if [ -z "$ZSYNCMAKE" ] && [ -x "$ROOT/packaging/.tools/zsyncmake" ]; then
+  ZSYNCMAKE="$ROOT/packaging/.tools/zsyncmake"
+fi
+if [ -z "$ZSYNCMAKE" ]; then
+  echo "    zsyncmake ausente: buscando pacote do Ubuntu em packaging/.tools"
+  mkdir -p "$ROOT/packaging/.tools"
+  CACHE="$WD/zsync.deb"
+  curl -fsSL -o "$CACHE" \
+    "http://archive.ubuntu.com/ubuntu/pool/universe/z/zsync/zsync_0.6.3-2_amd64.deb"
+  echo "efb23cca654ee92cbf331103699ac2dbcba1e22ffcc5f86ac46b6e3a06f98720  $CACHE" \
+    | sha256sum -c - >/dev/null
+  mkdir -p "$WD/deb" && (cd "$WD/deb" && ar x "$CACHE" && tar xf data.tar.zst)
+  cp "$WD/deb/usr/bin/zsyncmake" "$ROOT/packaging/.tools/zsyncmake"
+  chmod +x "$ROOT/packaging/.tools/zsyncmake"
+  ZSYNCMAKE="$ROOT/packaging/.tools/zsyncmake"
+fi
+
+(cd "$OUT_DIR" && "$ZSYNCMAKE" -u "$(basename "$OUT")" -o "$(basename "$OUT.zsync")" \
+  "$(basename "$OUT")" >/dev/null)
 
 echo
-file "$OUT_DIR/$APP_NAME-x86_64.AppImage"
-du -h "$OUT_DIR/$APP_NAME-x86_64.AppImage"
-echo "OK: $OUT_DIR/$APP_NAME-x86_64.AppImage"
+file "$OUT" "$OUT.zsync"
+du -h "$OUT" "$OUT.zsync"
+echo "OK: $OUT"
+echo "OK: $OUT.zsync"
